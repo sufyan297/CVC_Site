@@ -36,7 +36,8 @@ App::uses('HttpSocket','Network/Http');
 
     function getToken()
     {
-        return "EAACBSsPOPNEBAFXHUd9C9vfeebm9nZBQhtvyfLNgMlpKhuxLIy1K3edNCco0WyLtetfBJ5bUQD3uhR3fZCfMMxTXevVbkmAxZB52U5Tr3Ppixqe8PkfX97A8Med4298FYJbJ7Y5OrOiI60JuieyAZCZAQ5uE8rpwZD";
+        // return "EAACBSsPOPNEBAFXHUd9C9vfeebm9nZBQhtvyfLNgMlpKhuxLIy1K3edNCco0WyLtetfBJ5bUQD3uhR3fZCfMMxTXevVbkmAxZB52U5Tr3Ppixqe8PkfX97A8Med4298FYJbJ7Y5OrOiI60JuieyAZCZAQ5uE8rpwZD";
+        return "EAACBSsPOPNEBAPA3M2awPKtuBsycyvj6scSQNl6PFKsNJh53lNMdHdPII1XjFvO36MnALp77eztUjrjmv60BZCLQ84ZClaZBNQ6bVFdK928ZBwHnHpZBHF4VeBNpDZA3YWUz1vW8HYVhp7stYNW1LsyNmrRPqhXIQZD";
     }
     public function check_for_updates()
     {
@@ -86,13 +87,24 @@ App::uses('HttpSocket','Network/Http');
             $resp = $HttpSocket->get($rest_url);
 
             $resp = json_decode($resp,true);
+            if(isset($resp['error']))
+            {
+                $res = new ResponseObject();
+                $res->status = 'error';
+                $res->message = 'Oops! Something went wrong.';
+                $this->response->body(json_encode($res));
+                return $this->response;
+            }
+            else {
+                # code...
+                $res = new ResponseObject();
+                $res->status = 'success';
+                $res->data = $resp;
+                $res->message = 'Feed found.';
+                $this->response->body(json_encode($res));
+                return $this->response;
+            }
 
-            $res = new ResponseObject();
-            $res->status = 'success';
-            $res->data = $resp;
-            $res->message = 'Feed found.';
-            $this->response->body(json_encode($res));
-            return $this->response;
         }
     }
 
@@ -105,12 +117,23 @@ App::uses('HttpSocket','Network/Http');
             $resp = $HttpSocket->get($data['bookmark']);
             $resp = json_decode($resp,true);
 
-            $res = new ResponseObject();
-            $res->status = 'success';
-            $res->data = $resp;
-            $res->message = 'More Feed found.';
-            $this->response->body(json_encode($res));
-            return $this->response;
+            if(isset($resp['error']))
+            {
+                $res = new ResponseObject();
+                $res->status = 'error';
+                $res->message = 'Oops! Something went wrong.';
+                $this->response->body(json_encode($res));
+                return $this->response;
+            }
+            else {
+                # code...
+                $res = new ResponseObject();
+                $res->status = 'success';
+                $res->data = $resp;
+                $res->message = 'Feed found.';
+                $this->response->body(json_encode($res));
+                return $this->response;
+            }
         }
     }
 
